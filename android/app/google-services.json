@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1009267420654",
+    "project_id": "blood-app-9bae8",
+    "storage_bucket": "blood-app-9bae8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009267420654:android:b6bb6437cd1cb86255f2ff",
+        "android_client_info": {
+          "package_name": "mabans.com.blood_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009267420654-qlmmo1oo47q5usqq1m7oou03blk9drs6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mabans.com.blood_app",
+            "certificate_hash": "2e7f2db83f067f7a109ba9196f7327994a8bf55a"
+          }
+        },
+        {
+          "client_id": "1009267420654-ifdfn9pf2qeb49rv60apgh22o7of48qa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAdkuO4sJ031mMFtTaVncNEEshVFwhN4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009267420654-ifdfn9pf2qeb49rv60apgh22o7of48qa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
