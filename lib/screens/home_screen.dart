@@ -1,9 +1,9 @@
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:blood_app/screens/navigation_drawer.dart';
 import 'donate_screen.dart';
 import 'receive_screen.dart';
-import 'package:carousel_slider/carousel_controller.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

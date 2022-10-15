@@ -1,9 +1,10 @@
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
-
+import 'package:http/http.dart' as http;
 import 'home_screen.dart';
 
 class ReceiveScreen extends StatefulWidget {
@@ -15,19 +16,29 @@ class ReceiveScreen extends StatefulWidget {
 
 class _ReceiveScreenState extends State<ReceiveScreen> {
   _ReceiveScreenState() {
-    _selectedVal = _gender[0];
-    selectedVal = _bloodgroup[0];
+    _genderVal = _gender[0];
+    bloodVal = _bloodgroup[0];
     reasonsVal = _reasons[0];
   }
 
   //variables
   final _gender = ['Male', 'Female', 'Other'];
-  String? _selectedVal = "";
-  String? selectedVal = "";
+  String? _genderVal = "";
+  String? bloodVal = "";
   String? reasonsVal = "";
   final _formKey = GlobalKey<FormState>();
   TextEditingController _date = TextEditingController();
-  final _bloodgroup = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'I dont know'];
+  final _bloodgroup = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'O+',
+    'O-',
+    'AB+',
+    'AB-',
+    'I dont know'
+  ];
   final _reasons = ['Accident', 'Anemia', 'Surgery', 'Friend'];
 
   // create Time picker method
@@ -53,6 +64,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   final timeEditingController = TextEditingController();
   final dateEditingController = TextEditingController();
   final reasonsEditingController = TextEditingController();
+  final emailEditingController = TextEditingController();
+  final messageController = TextEditingController();
 
   final databaseRef = FirebaseDatabase.instance.ref();
 
@@ -65,13 +78,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     timeEditingController.dispose();
     dateEditingController.dispose();
     reasonsEditingController.dispose();
+    emailEditingController.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     //full name
     final fullName = TextFormField(
       autofocus: false,
@@ -80,12 +92,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       keyboardType: TextInputType.name,
       //validator
       validator: (value) {
-        RegExp regex = RegExp(r'^.{3,}$');
+        RegExp regex = RegExp(r'^.{7,}$');
         if (value!.isEmpty) {
           return ("Please enter your Full Name");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Name(Min. 3 Character)");
+          return ("Enter Valid Name(Min. 7 Character)");
         }
         return null;
       },
@@ -104,36 +116,64 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       ),
     );
 
+    //email field
+    final email = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autofocus: false,
+      controller: emailEditingController,
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return ("Please Enter Your Email");
+        }
+        // reg expression for email validation
+        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+          return ("Please Enter a valid email");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        emailEditingController.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.mail),
+        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "Email",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+
     //age
     final age = TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        controller: ageEditingController,
-        decoration: InputDecoration(
-          labelText: 'Age',
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: ageEditingController,
+      decoration: InputDecoration(
+        labelText: 'Age',
+        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        keyboardType: TextInputType.number,
+      ),
+      keyboardType: TextInputType.number,
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your age';
         } else if (int.tryParse(value)! > 100) {
           return 'You are really old enter a valid age';
-        }else if (int.tryParse(value)! < 16) {
+        } else if (int.tryParse(value)! < 16) {
           return 'You are too young to receive ';
-        }
-        else {
+        } else {
           return null;
         }
       },
-        );
-
+    );
 
     //Gender dropdown
     final gender = DropdownButtonFormField(
-        value: _selectedVal,
+        value: _genderVal,
         items: _gender
             .map((e) => DropdownMenuItem(
                   child: Text(e),
@@ -142,7 +182,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            _selectedVal = val as String;
+            _genderVal = val as String;
           });
         },
         icon: const Icon(
@@ -198,7 +238,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your weight';
-        }  else {
+        } else if (int.tryParse(value)! < 50) {
+          return 'You weigh less to donate';
+        } else {
           return null;
         }
       },
@@ -209,7 +251,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
     //bloodgroup
     final bloodgroup = DropdownButtonFormField(
-        value: selectedVal,
+        value: bloodVal,
         items: _bloodgroup
             .map((e) => DropdownMenuItem(
                   child: Text(e),
@@ -218,7 +260,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            selectedVal = val as String;
+            bloodVal = val as String;
           });
         },
         icon: const Icon(
@@ -239,9 +281,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         value: reasonsVal,
         items: _reasons
             .map((e) => DropdownMenuItem(
-          child: Text(e),
-          value: e,
-        ))
+                  child: Text(e),
+                  value: e,
+                ))
             .toList(),
         onChanged: (val) {
           setState(() {
@@ -271,7 +313,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       ),
     );
 
-
     // pick time
     final time_button = Material(
       elevation: 2,
@@ -288,24 +329,27 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       ),
     );
 
-
     //function to insert data on click
     Future addDonationdetails(
-        String fullName,
-        int age,
-        int weight,
-        String gender,
-        String bloodgroup,
-        String date_of_appointment,
-        String time,
-        String reasons,) async {
-      await FirebaseFirestore.instance.collection("receive").add({
+      String fullName,
+      int age,
+      int weight,
+      String email,
+      String gender,
+      String bloodgroup,
+      String date_of_appointment,
+      String time,
+      String reasons,
+    ) async {
+      await FirebaseFirestore.instance.collection("receive_book").add({
         'fullName': fullName,
         'age': age,
         'weight': weight,
-        'gender': _selectedVal,
-        'bloodgroup': selectedVal,
+        'gender': _genderVal,
+        'bloodgroup': bloodVal,
         'date_of_appointment': _date.text,
+        'email': emailEditingController.text,
+        'reasons': reasonsVal,
         // 'time': _timeOfDay,
       });
     }
@@ -317,19 +361,54 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
-          addDonationdetails(
-              fullNameEditingController.text.trim(),
-              int.parse(ageEditingController.text.trim()),
-              int.parse(weightEditingController.text.trim()),
-              genderEditingController.text.trim(),
-              bloodgroupEditingController.text.trim(),
-              dateEditingController.text.trim(),
-              timeEditingController.text.trim(),
-              reasonsEditingController.text.trim());
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            final response = await sendEmail(
+              fullNameEditingController.value.text,
+              emailEditingController.value.text,
+              messageController.value.text,
+              ageEditingController.value.text,
+              weightEditingController.value.text,
+              _genderVal!,
+              bloodVal!,
+              _date.value.text,
+              timeEditingController.value.text,
+              reasonsVal!,
+            );  addDonationdetails(
+                fullNameEditingController.text.trim(),
+                int.parse(ageEditingController.text.trim()),
+          int.parse(weightEditingController.text.trim()),
+          genderEditingController.text.trim(),
+          bloodgroupEditingController.text.trim(),
+          dateEditingController.text.trim(),
+          reasonsEditingController.text.trim(),
+          emailEditingController.text.trim(),
+          timeEditingController.text.trim());
           Fluttertoast.showToast(msg: 'Successfully Booked');
+
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) =>    const HomeScreen()));
+          MaterialPageRoute(builder: (context) => const HomeScreen()));
+            ScaffoldMessenger.of(context).showSnackBar(response == 200
+                ? const SnackBar(
+                    content: Text('Booked Check your email!'),
+                    backgroundColor: Colors.red)
+                : const SnackBar(
+                    content: Text('Failed to book!'),
+                    backgroundColor: Colors.green));
+            ScaffoldMessenger.of(context).showSnackBar(response == 200
+                ? const SnackBar(
+                    content: Text('Message Sent!'),
+                    backgroundColor: Colors.green)
+                : const SnackBar(
+                    content: Text('Failed to send message!'),
+                    backgroundColor: Colors.red));
+            fullNameEditingController.clear();
+            emailEditingController.clear();
+            messageController.clear();
+            ageEditingController.clear();
+
+
+          }
         },
         child: const Text("Book",
             textAlign: TextAlign.center,
@@ -337,7 +416,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
       ),
     );
-
 
     return Scaffold(
       appBar: AppBar(title: Text("Receive Screen")),
@@ -360,6 +438,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     ),
                     const SizedBox(height: 45),
                     fullName,
+                    const SizedBox(height: 35),
+                    email,
                     const SizedBox(height: 35),
                     age,
                     const SizedBox(
@@ -395,6 +475,52 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       ),
     );
   }
-//method
+}
 
+//Send Email Method
+Future sendEmail(
+  String name,
+  String email,
+  String subject,
+  String bloodgroup,
+  String weight,
+  String _date,
+  String _genderVal,
+  String age,
+  String message,
+  String reasons,
+) async {
+  final serviceId = 'service_uehihvi';
+  final templateId = 'template_gja27um';
+  final userId = 'uAtaDvVi-cdzgGdQ5';
+
+  final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+  final response = await http.post(
+    url,
+    headers: {
+      'origin': 'http://localhost',
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({
+      'service_id': serviceId,
+      'template_id': templateId,
+      'user_id': userId,
+      'template_params': {
+        'user_name': name,
+        'user_email': email,
+        'user_subject': "Confirmation of Blood Donation Email",
+        'user_message1':
+            "Your request will be confirmed shortly. Thank you for choosing Mama Lucy. ",
+        'user_message2': age,
+        'user_message5': _date,
+        'gender': _genderVal,
+        'user_message4': weight,
+        'user_message6': reasons,
+        'user_message': message,
+        'user_message7': bloodgroup,
+      },
+    }),
+  );
+
+  return response.statusCode;
 }

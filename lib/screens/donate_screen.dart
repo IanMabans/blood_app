@@ -92,7 +92,7 @@ class _DonateScreenState extends State<DonateScreen> {
       keyboardType: TextInputType.name,
       //validator
       validator: (value) {
-        RegExp regex = RegExp(r'^.{3,}$');
+        RegExp regex = RegExp(r'^.{7,}$');
         if (value!.isEmpty) {
           return ("Please enter your Full Name");
         }
@@ -342,18 +342,6 @@ class _DonateScreenState extends State<DonateScreen> {
                 selectedVal!,
               _date.value.text
                 );
-            ScaffoldMessenger.of(context).showSnackBar(response == 200
-                ? const SnackBar(
-                    content: Text('Booked Check your email!'),
-                    backgroundColor: Colors.red)
-                : const SnackBar(
-                    content: Text('Failed to book!'),
-                    backgroundColor: Colors.red));
-            fullNameEditingController.clear();
-            emailEditingController.clear();
-            messageController.clear();
-            ageEditingController.clear();
-
             addDonationdetails(
                 fullNameEditingController.text.trim(),
                 int.parse(ageEditingController.text.trim()),
@@ -367,6 +355,19 @@ class _DonateScreenState extends State<DonateScreen> {
 
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
+            ScaffoldMessenger.of(context).showSnackBar(response == 200
+                ? const SnackBar(
+                    content: Text('Booked Check your email!'),
+                    backgroundColor: Colors.red)
+                : const SnackBar(
+                    content: Text('Failed to book!'),
+                    backgroundColor: Colors.red));
+            fullNameEditingController.clear();
+            emailEditingController.clear();
+            messageController.clear();
+            ageEditingController.clear();
+
+
           }
         },
         child: const Text("Book",
