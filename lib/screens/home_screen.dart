@@ -1,4 +1,5 @@
 
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:blood_app/screens/navigation_drawer.dart';
 import 'donate_screen.dart';
@@ -11,6 +12,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -49,38 +52,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     return Scaffold(
-        drawer: const NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Mama Lucy Donation'),
-          centerTitle: true,
-          backgroundColor: Colors.red,
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(36.0),
-                child: Form(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 180,
-                        child: Image.asset("assets/bloodlogo.png",
-                            fit: BoxFit.contain),
-                      ),
-                      const SizedBox(height: 35),
-                      DonateButton,
-                      const SizedBox(height: 35),
-                      ReceiveButton
-                    ],
+      drawer: const NavigationDrawer(),
+      appBar: AppBar(
+        title: const Text('Mama Lucy Donation'),
+        centerTitle: true,
+        backgroundColor: Colors.red,
+      ),
+        body: Container(
+          child: Center(
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: 450.0,
+                    width: double.infinity,
+                    child: Carousel(
+                      dotSize: 6.0,
+                      dotSpacing: 15.0,
+                      dotPosition: DotPosition.bottomCenter,
+                      dotBgColor: Colors.transparent,
+                      images: [
+                        Image.asset('assets/poster1.png', fit: BoxFit.cover),
+                        Image.asset('assets/poster2.png', fit: BoxFit.cover),
+                        Image.asset('assets/poster3.png', fit: BoxFit.cover),
+
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-        ));
+                  const SizedBox(height: 35),
+                  DonateButton,
+                  const SizedBox(height: 35),
+                  ReceiveButton
+                ],
+              )),
+        ),
+
+    );
   }
 }

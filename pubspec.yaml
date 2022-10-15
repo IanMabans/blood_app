@@ -48,6 +48,7 @@ dependencies:
   firebase_database: ^9.1.7
   http: ^0.13.5
   carousel_slider: ^4.1.1
+  carousel_pro: ^1.0.0
 
 
 

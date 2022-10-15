@@ -16,15 +16,15 @@ class DonateScreen extends StatefulWidget {
 
 class _DonateScreenState extends State<DonateScreen> {
   _DonateScreenState() {
-    _selectedVal = _gender[0];
-    selectedVal = _bloodgroup[0];
+    _genderVal = _gender[0];
+    bloodVal = _bloodgroup[0];
   }
 
   //variables
 
   final _gender = ['Male', 'Female', 'Other'];
-  String? _selectedVal = "";
-  String? selectedVal = "";
+  String? _genderVal = "";
+  String? bloodVal = "";
   final _formKey = GlobalKey<FormState>();
   TextEditingController _date = TextEditingController();
 
@@ -39,8 +39,6 @@ class _DonateScreenState extends State<DonateScreen> {
     'AB-',
     'I dont know'
   ];
-
-
 
   // create Time picker method
   void _showTimePicker() {
@@ -173,7 +171,7 @@ class _DonateScreenState extends State<DonateScreen> {
 
     //Gender dropdown
     final gender = DropdownButtonFormField(
-        value: _selectedVal,
+        value: _genderVal,
         items: _gender
             .map((e) => DropdownMenuItem(
                   child: Text(e),
@@ -182,7 +180,7 @@ class _DonateScreenState extends State<DonateScreen> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            _selectedVal = val as String;
+            _genderVal = val as String;
           });
         },
         icon: const Icon(
@@ -275,7 +273,7 @@ class _DonateScreenState extends State<DonateScreen> {
 
     //bloodgroup
     final bloodgroup = DropdownButtonFormField(
-        value: selectedVal,
+        value: bloodVal,
         items: _bloodgroup
             .map((e) => DropdownMenuItem(
                   child: Text(e),
@@ -284,7 +282,7 @@ class _DonateScreenState extends State<DonateScreen> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            selectedVal = val as String;
+            bloodVal = val as String;
           });
         },
         icon: const Icon(
@@ -315,8 +313,8 @@ class _DonateScreenState extends State<DonateScreen> {
         'fullName': fullName,
         'age': age,
         'weight': weight,
-        'gender': _selectedVal,
-        'bloodgroup': selectedVal,
+        'gender': _genderVal,
+        'bloodgroup': bloodVal,
         'date_of_appointment': _date.text,
         'email': emailEditingController.text,
         // 'time': _timeOfDay,
@@ -337,11 +335,10 @@ class _DonateScreenState extends State<DonateScreen> {
                 emailEditingController.value.text,
                 messageController.value.text,
                 ageEditingController.value.text,
-              weightEditingController.value.text,
-                _selectedVal!,
-                selectedVal!,
-              _date.value.text
-                );
+                weightEditingController.value.text,
+                _genderVal!,
+                bloodVal!,
+                _date.value.text);
             addDonationdetails(
                 fullNameEditingController.text.trim(),
                 int.parse(ageEditingController.text.trim()),
@@ -366,8 +363,6 @@ class _DonateScreenState extends State<DonateScreen> {
             emailEditingController.clear();
             messageController.clear();
             ageEditingController.clear();
-
-
           }
         },
         child: const Text("Book",
@@ -440,12 +435,11 @@ Future sendEmail(
   String name,
   String email,
   String subject,
-
-    String weight ,
-    String _selectedVal,
-    String bloodgroup,
-    String date,
-    String age,
+  String weight,
+  String _genderVal,
+  String age,
+  String bloodVal,
+  String date,
 ) async {
   final serviceId = 'service_abignuu';
   final templateId = 'template_wocn4q9';
@@ -466,13 +460,12 @@ Future sendEmail(
         'user_name': name,
         'user_email': email,
         'user_subject': "Confirmation of Blood Donation Email",
-        'user_message' : age,
+        'user_message3': age,
         'user_message1': "Thank you for donating at Mama Lucy Hospital ",
         'user_message2': weight,
-        'gender': _selectedVal,
-    'user_message4':bloodgroup,
-    'user_message5':date,
-
+        'user_message6': _genderVal,
+        'user_message4': bloodVal,
+        'user_message5': date,
       },
     }),
   );
