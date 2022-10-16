@@ -309,7 +309,7 @@ class _DonateScreenState extends State<DonateScreen> {
       String date_of_appointment,
       String time,
     ) async {
-      await FirebaseFirestore.instance.collection("donate_request").add({
+      await FirebaseFirestore.instance.collection("donate_book").add({
         'fullName': fullName,
         'age': age,
         'weight': weight,
