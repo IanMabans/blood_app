@@ -341,7 +341,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       String time,
       String reasons,
     ) async {
-      await FirebaseFirestore.instance.collection("receive_book").add({
+      await FirebaseFirestore.instance.collection("receive request").add({
         'fullName': fullName,
         'age': age,
         'weight': weight,
