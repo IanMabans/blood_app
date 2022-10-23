@@ -1,13 +1,13 @@
+import 'package:blood_app/screens/admin_homescreen.dart';
 import 'package:blood_app/screens/home_screen.dart';
 import 'package:blood_app/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
-
 //firebase
 final _auth = FirebaseAuth.instance;
+final _admin = FirebaseAuth.instance;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,7 +17,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
 //form key
   final _formkey = GlobalKey<FormState>();
 
@@ -26,8 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-
-
+  String adminEmail = 'test1@gmail.com';
 
   // string for displaying the error Message
   String? errorMessage;
@@ -39,14 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
       autofocus: false,
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
-
       validator: (value) {
         if (value!.isEmpty) {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-            .hasMatch(value)) {
+        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
@@ -103,9 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          signIn(emailController.text, passwordController.text, context);
-         // Navigator.pushReplacement(context,
-             // MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Center(child: CircularProgressIndicator());
+          signIn(emailController.text, passwordController.text, adminEmail,
+              context);
+          // Navigator.pushReplacement(context,
+          // MaterialPageRoute(builder: (context) => const HomeScreen()));
         },
         child: const Text("Login",
             textAlign: TextAlign.center,
@@ -168,22 +166,29 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 //login function
-  void signIn(String email, String password, BuildContext context) async
-  {
-// var _formKey;
-
-  if (true) {
-
-    await _auth.signInWithEmailAndPassword(email: email, password: password)
+signIn(String email, String password, String adminEmail,
+    BuildContext context) async {
+  if (email == ('admin@gmail.com')) {
+    await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
-      Fluttertoast.showToast(msg: "Login Successful"),
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) =>    const HomeScreen())),
-
-    })
+              Fluttertoast.showToast(msg: "Welcome Admin"),
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const adminHome())),
+            })
+        .catchError((e) {
+      Fluttertoast.showToast(msg: e!.message);
+    });
+  } else if (true) {
+    await _admin
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((value) => {
+              Fluttertoast.showToast(msg: "Login Successful "),
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const HomeScreen())),
+            })
         .catchError((e) {
       Fluttertoast.showToast(msg: e!.message);
     });
   }
-
 }

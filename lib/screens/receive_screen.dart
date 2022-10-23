@@ -363,6 +363,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            Center(child: CircularProgressIndicator());
             final response = await sendEmail(
               fullNameEditingController.value.text,
               emailEditingController.value.text,
@@ -374,20 +375,21 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               _date.value.text,
               timeEditingController.value.text,
               reasonsVal!,
-            );  addDonationdetails(
+            );
+            addDonationdetails(
                 fullNameEditingController.text.trim(),
                 int.parse(ageEditingController.text.trim()),
-          int.parse(weightEditingController.text.trim()),
-          genderEditingController.text.trim(),
-          bloodgroupEditingController.text.trim(),
-          dateEditingController.text.trim(),
-          reasonsEditingController.text.trim(),
-          emailEditingController.text.trim(),
-          timeEditingController.text.trim());
-          Fluttertoast.showToast(msg: 'Successfully Booked');
+                int.parse(weightEditingController.text.trim()),
+                genderEditingController.text.trim(),
+                bloodgroupEditingController.text.trim(),
+                dateEditingController.text.trim(),
+                reasonsEditingController.text.trim(),
+                emailEditingController.text.trim(),
+                timeEditingController.text.trim());
+            Fluttertoast.showToast(msg: 'Successfully Booked');
 
-          Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
             ScaffoldMessenger.of(context).showSnackBar(response == 200
                 ? const SnackBar(
                     content: Text('Booked Check your email!'),
@@ -406,8 +408,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             emailEditingController.clear();
             messageController.clear();
             ageEditingController.clear();
-
-
           }
         },
         child: const Text("Book",

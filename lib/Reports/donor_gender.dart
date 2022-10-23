@@ -1,33 +1,30 @@
-import 'package:blood_app/Reports/recipient_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class recipient extends StatefulWidget {
-  const recipient({Key? key}) : super(key: key);
+class donorGender extends StatefulWidget {
+  const donorGender({Key? key}) : super(key: key);
 
   @override
-  State<recipient> createState() => _recipientState();
+  State<donorGender> createState() => _donorGenderState();
 }
 
-class _recipientState extends State<recipient> {
+class _donorGenderState extends State<donorGender> {
   CollectionReference _collectionReference =
-      FirebaseFirestore.instance.collection('receive request');
-
+  FirebaseFirestore.instance.collection('donor request');
   late Stream<QuerySnapshot> _streamData;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     _streamData = _collectionReference.snapshots();
-  }
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Recipient Booking Report'),
+          title: Text('Donor Booked Gender Report'),
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: _streamData,
@@ -47,19 +44,17 @@ class _recipientState extends State<recipient> {
           },
         ));
   }
-
   List<Map> parseData(QuerySnapshot querySnapshot) {
     List<QueryDocumentSnapshot> listDocs = querySnapshot.docs;
     List<Map> listItems = listDocs
         .map((e) => {
-              'fullName': e['fullName'],
-              'email': e['email'],
-              'bloodgroup': e['bloodgroup'],
-            })
+      'fullName': e['fullName'],
+      'gender': e['gender'],
+      'bloodgroup': e ['bloodgroup'],
+    })
         .toList();
     return listItems;
   }
-
   ListView buildListView(List<Map<dynamic, dynamic>> _list) {
     return ListView.builder(
         itemCount: _list.length,
@@ -71,14 +66,14 @@ class _recipientState extends State<recipient> {
               color: Colors.redAccent,
             ),
             title: Text(thisItem['fullName']),
-            subtitle: Text(thisItem['email']),
+            subtitle: Text(thisItem['gender']),
             trailing: Text(thisItem['bloodgroup']),
             isThreeLine: true,
             dense: true,
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const recipientDetails()));
-            },
+            // onTap: () {
+            //   Navigator.of(context).pushReplacement(
+            //       MaterialPageRoute(builder: (context) => const donorDetails()));
+            // },
           );
         });
   }

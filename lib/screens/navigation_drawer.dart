@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../pages/chats.dart';
+import '../pages/my_account.dart';
+import '../pages/settings.dart';
+import 'login_screen.dart';
+
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
@@ -62,13 +67,13 @@ class NavigationDrawer extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              DrawerItem(
-                  name: 'Favourites',
-                  icon: Icons.favorite_outline,
-                  onPressed: () => onItemPressed(context, index: 3)),
-              const SizedBox(
-                height: 30,
-              ),
+              // DrawerItem(
+              //     name: 'Favourites',
+              //     icon: Icons.favorite_outline,
+              //     onPressed: () => onItemPressed(context, index: 3)),
+              // const SizedBox(
+              //   height: 30,
+              // ),
               const Divider(
                 thickness: 1,
                 height: 10,
@@ -100,6 +105,23 @@ class NavigationDrawer extends StatelessWidget {
       case 0:
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const People()));
+        break;
+      case 1:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const myAccount()));
+        break;
+      case 2:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const chats()));
+        break;
+      case 4:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const settings()));
+        break;
+      case 5:
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+              (route) => false,);
         break;
       default:
         Navigator.pop(context);

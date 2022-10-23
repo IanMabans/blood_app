@@ -309,7 +309,7 @@ class _DonateScreenState extends State<DonateScreen> {
       String date_of_appointment,
       String time,
     ) async {
-      await FirebaseFirestore.instance.collection("donate_book").add({
+      await FirebaseFirestore.instance.collection("donor request").add({
         'fullName': fullName,
         'age': age,
         'weight': weight,
@@ -329,6 +329,9 @@ class _DonateScreenState extends State<DonateScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
+          Center(
+            child: CircularProgressIndicator(),
+          );
           if (_formKey.currentState!.validate()) {
             final response = await sendEmail(
                 fullNameEditingController.value.text,
@@ -461,7 +464,7 @@ Future sendEmail(
         'user_email': email,
         'user_subject': "Confirmation of Blood Donation Email",
         'user_message3': age,
-        'user_message1': "Thank you for donating at Mama Lucy Hospital ",
+        'user_message1': "Kindly wait as we process your application ",
         'user_message2': weight,
         'user_message6': _genderVal,
         'user_message4': bloodVal,

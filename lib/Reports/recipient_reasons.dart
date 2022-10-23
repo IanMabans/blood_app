@@ -1,18 +1,17 @@
-import 'package:blood_app/Reports/recipient_details.dart';
+import 'package:blood_app/Reports/recipient_gender.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class recipient extends StatefulWidget {
-  const recipient({Key? key}) : super(key: key);
+class recipientReasons extends StatefulWidget {
+  const recipientReasons({Key? key}) : super(key: key);
 
   @override
-  State<recipient> createState() => _recipientState();
+  State<recipientReasons> createState() => _recipientReasonsState();
 }
 
-class _recipientState extends State<recipient> {
+class _recipientReasonsState extends State<recipientReasons> {
   CollectionReference _collectionReference =
       FirebaseFirestore.instance.collection('receive request');
-
   late Stream<QuerySnapshot> _streamData;
 
   @override
@@ -27,7 +26,7 @@ class _recipientState extends State<recipient> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Recipient Booking Report'),
+          title: Text('Recipient Reasons Report'),
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: _streamData,
@@ -53,7 +52,7 @@ class _recipientState extends State<recipient> {
     List<Map> listItems = listDocs
         .map((e) => {
               'fullName': e['fullName'],
-              'email': e['email'],
+              'reasons': e['reasons'],
               'bloodgroup': e['bloodgroup'],
             })
         .toList();
@@ -71,13 +70,13 @@ class _recipientState extends State<recipient> {
               color: Colors.redAccent,
             ),
             title: Text(thisItem['fullName']),
-            subtitle: Text(thisItem['email']),
+            subtitle: Text(thisItem['reasons']),
             trailing: Text(thisItem['bloodgroup']),
             isThreeLine: true,
             dense: true,
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const recipientDetails()));
+                  builder: (context) => const recipientGender()));
             },
           );
         });
