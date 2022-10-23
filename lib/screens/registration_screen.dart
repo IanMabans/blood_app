@@ -123,7 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       obscureText: true,
       //validator
       validator: (value) {
-        RegExp regex =  RegExp(r'^.{6,}$');
+        RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Please enter your password");
         }
@@ -152,7 +152,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       obscureText: true,
       //validator
       validator: (value) {
-        if (confirmPasswordEditingController.text != passwordEditingController.text) {
+        if (confirmPasswordEditingController.text !=
+            passwordEditingController.text) {
           return "Password don't match";
         }
         return null;
@@ -179,6 +180,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
+          Center(child: CircularProgressIndicator());
           signUp(emailEditingController.text, passwordEditingController.text);
         },
         child: const Text("Sign Up",
@@ -203,13 +205,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
         body: Center(
             child: SingleChildScrollView(
-             child: Container(
+          child: Container(
               color: Colors.white,
-                child: Padding(
-                 padding: const EdgeInsets.all(36.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(36.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[

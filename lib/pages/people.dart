@@ -8,7 +8,6 @@ class People extends StatelessWidget {
       appBar: AppBar(
         title: const Text('People'),
         centerTitle: true,
-        backgroundColor: Colors.black12,
       ),
     );
   }

@@ -1,6 +1,6 @@
+import 'package:blood_app/Reports/donor_gender.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class donorDetails extends StatefulWidget {
   const donorDetails({Key? key}) : super(key: key);
@@ -10,17 +10,18 @@ class donorDetails extends StatefulWidget {
 }
 
 class _donorDetailsState extends State<donorDetails> {
-    CollectionReference _collectionReference =
-  FirebaseFirestore.instance.collection('donor request');
+  CollectionReference _collectionReference =
+      FirebaseFirestore.instance.collection('donor request');
   late Stream<QuerySnapshot> _streamData;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     _streamData = _collectionReference.snapshots();
-
   }
+
   // @override
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,10 @@ class _donorDetailsState extends State<donorDetails> {
     List<QueryDocumentSnapshot> listDocs = querySnapshot.docs;
     List<Map> listItems = listDocs
         .map((e) => {
-      'fullName': e['fullName'],
-      'date_of_appointment': e['date_of_appointment'],
-      'bloodgroup': e ['bloodgroup'],
-    })
+              'fullName': e['fullName'],
+              'date_of_appointment': e['date_of_appointment'],
+              'bloodgroup': e['bloodgroup'],
+            })
         .toList();
     return listItems;
   }
@@ -74,10 +75,10 @@ class _donorDetailsState extends State<donorDetails> {
             trailing: Text(thisItem['bloodgroup']),
             isThreeLine: true,
             dense: true,
-            // onTap: () {
-            //   Navigator.of(context).pushReplacement(
-            //       MaterialPageRoute(builder: (context) => const donorDetails()));
-            // },
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const donorGender()));
+            },
           );
         });
   }
