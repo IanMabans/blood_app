@@ -2,6 +2,7 @@ import 'package:blood_app/Reports/receive_report.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:blood_app/screens/navigation_drawer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../Reports/donor_report.dart';
 import 'donate_screen.dart';
 import 'login_screen.dart';
@@ -154,7 +155,7 @@ class _adminHomeState extends State<adminHome> {
       case 0:
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()),
-              (route) => false,);
+              (route) => false,);Fluttertoast.showToast(msg: "You have logged out" ,backgroundColor: Colors.red);
     }
 
   }

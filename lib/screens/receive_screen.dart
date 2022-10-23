@@ -386,7 +386,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 reasonsEditingController.text.trim(),
                 emailEditingController.text.trim(),
                 timeEditingController.text.trim());
-            Fluttertoast.showToast(msg: 'Successfully Booked');
+            Fluttertoast.showToast(msg: 'Successfully Booked', backgroundColor: Colors.red);
 
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));

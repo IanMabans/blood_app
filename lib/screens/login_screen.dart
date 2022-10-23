@@ -169,26 +169,30 @@ class _LoginScreenState extends State<LoginScreen> {
 signIn(String email, String password, String adminEmail,
     BuildContext context) async {
   if (email == ('admin@gmail.com')) {
+    CircularProgressIndicator();
     await _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
-              Fluttertoast.showToast(msg: "Welcome Admin"),
+              Fluttertoast.showToast(msg: "Welcome Admin", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const adminHome())),
             })
         .catchError((e) {
-      Fluttertoast.showToast(msg: e!.message);
+      Fluttertoast.showToast(msg: e!.message,backgroundColor: Colors.red);
     });
   } else if (true) {
+    CircularProgressIndicator();
     await _admin
+
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) => {
-              Fluttertoast.showToast(msg: "Login Successful "),
+              Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const HomeScreen())),
             })
         .catchError((e) {
-      Fluttertoast.showToast(msg: e!.message);
+      Fluttertoast.showToast(msg: e!.message,backgroundColor: Colors.red);
+
     });
   }
 }
