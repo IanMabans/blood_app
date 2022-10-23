@@ -248,7 +248,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 postDetailsToFirestore(),
               })
           .catchError((e) {
-        Fluttertoast.showToast(msg: e!.message);
+        Fluttertoast.showToast(msg: e!.message, backgroundColor: Colors.red);
       });
     }
   }
@@ -272,7 +272,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully ");
+    Fluttertoast.showToast(msg: "Account created successfully ", backgroundColor: Colors.red);
     Navigator.pushAndRemoveUntil(
         (context),
         MaterialPageRoute(builder: (context) => const HomeScreen()),

@@ -2,6 +2,7 @@ import 'package:blood_app/screens/drawer_item.dart';
 import 'package:blood_app/pages/people.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -30,9 +31,9 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Material(
-          color: Colors.red,
+          color: Colors.red.shade600,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24.0, 80, 24, 0),
+            padding: const EdgeInsets.fromLTRB(20.0, 60, 24, 0),
             child: Column(children: [
               headerWidget(),
               const SizedBox(
@@ -121,7 +122,7 @@ class NavigationDrawer extends StatelessWidget {
       case 5:
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()),
-              (route) => false,);
+              (route) => false,);Fluttertoast.showToast(msg: "You have logged out", backgroundColor: Colors.red);
         break;
       default:
         Navigator.pop(context);
@@ -134,7 +135,7 @@ class NavigationDrawer extends StatelessWidget {
         'https://www.artofliving.org/sites/www.artofliving.org/files/styles/original_image/public/wysiwyg_imageupload/guilherme-stecanella-375176-unsplash.jpg.webp?itok=lR2wOhfN';
     return Row(
       children: [
-        const CircleAvatar(
+         CircleAvatar(
           radius: 40,
           backgroundImage: NetworkImage(url),
         ),
@@ -144,12 +145,12 @@ class NavigationDrawer extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text('Person name',
-                style: TextStyle(fontSize: 14, color: Colors.white)),
+            Text('Mama Lucy Hospital',
+                style: TextStyle(fontSize: 20, color: Colors.white)),
             SizedBox(
               height: 10,
             ),
-            Text('person@email.com',
+            Text('World Class Healthcare',
                 style: TextStyle(fontSize: 14, color: Colors.white))
           ],
         )

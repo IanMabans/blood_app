@@ -351,7 +351,7 @@ class _DonateScreenState extends State<DonateScreen> {
                 dateEditingController.text.trim(),
                 emailEditingController.text.trim(),
                 timeEditingController.text.trim());
-            Fluttertoast.showToast(msg: 'Successfully Booked');
+            Fluttertoast.showToast(msg: 'Successfully Booked', backgroundColor: Colors.red);
 
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
