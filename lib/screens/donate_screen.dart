@@ -301,8 +301,8 @@ class _DonateScreenState extends State<DonateScreen> {
     //function to insert data on click
     Future addDonationdetails(
       String fullName,
-      int age,
-      int weight,
+      String age,
+      String weight,
       String email,
       String gender,
       String bloodgroup,
@@ -344,8 +344,8 @@ class _DonateScreenState extends State<DonateScreen> {
                 _date.value.text);
             addDonationdetails(
                 fullNameEditingController.text.trim(),
-                int.parse(ageEditingController.text.trim()),
-                int.parse(weightEditingController.text.trim()),
+                ageEditingController.text.trim(),
+                weightEditingController.text.trim(),
                 genderEditingController.text.trim(),
                 bloodgroupEditingController.text.trim(),
                 dateEditingController.text.trim(),

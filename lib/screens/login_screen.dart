@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../pages/settings.dart';
+
 //firebase
 final _auth = FirebaseAuth.instance;
 final _admin = FirebaseAuth.instance;
@@ -91,6 +93,21 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
+    // Forgot Password
+    final forgotPassword= GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const settings()));
+      },
+      child: Text(
+          'Forgot Password?',
+              style: TextStyle(
+          color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+      ),
+    );
+
     //Login Button
     final loginButton = Material(
       elevation: 5,
@@ -135,6 +152,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       emailField,
                       const SizedBox(height: 25),
                       passwordField,
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            forgotPassword,
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 35),
                       loginButton,
                       const SizedBox(height: 15),

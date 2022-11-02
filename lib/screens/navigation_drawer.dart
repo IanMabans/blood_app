@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import '../pages/chats.dart';
 import '../pages/my_account.dart';
 import '../pages/settings.dart';
@@ -109,7 +108,8 @@ class NavigationDrawer extends StatelessWidget {
         break;
       case 1:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const myAccount()));
+            context,
+            MaterialPageRoute(builder: (context) => const myAccount()));
         break;
       case 2:
         Navigator.push(
@@ -122,7 +122,9 @@ class NavigationDrawer extends StatelessWidget {
       case 5:
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()),
-              (route) => false,);Fluttertoast.showToast(msg: "You have logged out", backgroundColor: Colors.red);
+              (route) => false,);
+        Fluttertoast.showToast(
+            msg: "You have logged out", backgroundColor: Colors.red);
         break;
       default:
         Navigator.pop(context);

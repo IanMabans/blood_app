@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return Scaffold(
-      drawer: const NavigationDrawer(),
+      drawer:  NavigationDrawer(),
       appBar: AppBar(
         title: const Text('Mama Lucy Donation'),
         centerTitle: true,
