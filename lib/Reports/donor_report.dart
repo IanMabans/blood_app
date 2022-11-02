@@ -1,3 +1,4 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'donor_details.dart';
@@ -15,15 +16,12 @@ class _donorReportState extends State<donorReport> {
 
   late Stream<QuerySnapshot> _streamData;
 
-
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     _streamData = _collectionReference.snapshots();
-
   }
 
   @override
@@ -58,6 +56,10 @@ class _donorReportState extends State<donorReport> {
               'fullName': e['fullName'],
               'email': e['email'],
               'bloodgroup': e['bloodgroup'],
+              'gender': e['gender'],
+              'date_of_appointment': e['date_of_appointment'],
+              'age': e['age'],
+              'weight': e['weight'],
             })
         .toList();
     return listItems;
@@ -65,25 +67,88 @@ class _donorReportState extends State<donorReport> {
 
   ListView buildListView(List<Map<dynamic, dynamic>> _list) {
     return ListView.builder(
+        shrinkWrap: true,
         itemCount: _list.length,
         itemBuilder: (context, index) {
           Map thisItem = _list[index];
-          return ListTile(
-            leading: Icon(
-              Icons.person_sharp,
-              color: Colors.redAccent,
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Center(
+              child: Column(
+                children: [
+                  DataTable(
+                      //columnSpacing: 10,
+                      //horizontalMargin: 5,
+                      //minWidth:600,
+
+                      columns: [
+                        DataColumn2(
+                            label: Expanded(
+                              child: Text(
+                            'FULL NAME',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                        DataColumn2( label: Expanded(
+                          child: Text(
+                            'EMAIL',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                        DataColumn2(
+                            label: Expanded(
+                              child: Text(
+                                'BLOOD GROUP',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.italic, color: Colors.red),
+                              ),
+                            )),
+                        DataColumn2( label: Expanded(
+                          child: Text(
+                            'GENDER',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                        DataColumn2( label: Expanded(
+                          child: Text(
+                            'DATE OF APPOINTMENT',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                        DataColumn2( label: Expanded(
+                          child: Text(
+                            'AGE',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                        DataColumn2( label: Expanded(
+                          child: Text(
+                            'WEIGHT',
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic, color: Colors.red),
+                          ),
+                        )),
+                      ], rows: [
+                    DataRow(cells: [
+                      DataCell(Text(thisItem['fullName'])),
+                      DataCell(Text(thisItem['email'])),
+                      DataCell(Text(thisItem['bloodgroup'])),
+                      DataCell(Text(thisItem['gender'])),
+                      DataCell(Text(thisItem['date_of_appointment'])),
+                      DataCell(Text("${thisItem['age']}")),
+                      DataCell(Text("${thisItem['weight']}")),
+                    ])
+                  ])
+                ],
+              ),
             ),
-            title: Text(thisItem['fullName']),
-            subtitle: Text(thisItem['email']),
-            trailing: Text(thisItem['bloodgroup']),
-            isThreeLine: true,
-            dense: true,
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const donorDetails()));
-            },
           );
+
         });
   }
-
 }
