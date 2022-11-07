@@ -200,7 +200,7 @@ signIn(String email, String password, String adminEmail,
     await _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
-              Fluttertoast.showToast(msg: "Welcome Admin", backgroundColor: Colors.red),
+              Fluttertoast.showToast(msg: "Welcome Admin 🙂", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const adminHome())),
             })
@@ -213,7 +213,7 @@ signIn(String email, String password, String adminEmail,
 
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) => {
-              Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.red),
+              Fluttertoast.showToast(msg: "Login Successful ", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const HomeScreen())),
             })
