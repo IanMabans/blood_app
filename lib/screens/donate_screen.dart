@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'home_screen.dart';
+import 'package:flutter/services.dart';
 
 class DonateScreen extends StatefulWidget {
   const DonateScreen({Key? key}) : super(key: key);
@@ -81,6 +82,7 @@ class _DonateScreenState extends State<DonateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final donorStatus = 'pending';
     //Full name
     final fullName = TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -147,6 +149,9 @@ class _DonateScreenState extends State<DonateScreen> {
     //age
     final age = TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(2),
+      ],
       controller: ageEditingController,
       decoration: InputDecoration(
         labelText: 'Age',
@@ -159,8 +164,8 @@ class _DonateScreenState extends State<DonateScreen> {
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter your age';
-        } else if (int.tryParse(value)! > 100) {
-          return 'You are really old enter a valid age';
+        } else if (int.tryParse(value)! > 65) {
+          return 'You are old to donate';
         } else if (int.tryParse(value)! < 16) {
           return 'You are too young to donate';
         } else {
@@ -198,6 +203,9 @@ class _DonateScreenState extends State<DonateScreen> {
 
     //date of appointment
     final date_of_appointment = TextField(
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(10),
+      ],
       controller: _date,
       decoration: InputDecoration(
         icon: Icon(Icons.calendar_today_rounded),
@@ -211,7 +219,7 @@ class _DonateScreenState extends State<DonateScreen> {
         DateTime? pickdate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2022),
+            firstDate: DateTime.now(),
             lastDate: DateTime(2050));
         if (pickdate != null) {
           setState(() {
@@ -319,7 +327,20 @@ class _DonateScreenState extends State<DonateScreen> {
         'email': emailEditingController.text,
         // 'time': _timeOfDay,
       });
+      throw FirebaseFirestore.instance.collection("donor status").add({
+        'fullName': fullName,
+        'age': age,
+        'weight': weight,
+        'gender': _genderVal,
+        'bloodgroup': bloodVal,
+        'date_of_appointment': _date.text,
+        'Donor Status': donorStatus,
+
+        //'email': emailEditingController.text,
+        // 'time': _timeOfDay,
+      });
     }
+
 
     //Book button
     final bookButton = Material(

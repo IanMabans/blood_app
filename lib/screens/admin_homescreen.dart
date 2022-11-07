@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:blood_app/screens/navigation_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../Reports/Users Report.dart';
+import '../Reports/donor status report.dart';
 import '../Reports/donor_report.dart';
+import '../Reports/receive status report.dart';
 import 'donate_screen.dart';
 import 'login_screen.dart';
 import 'receive_screen.dart';
@@ -100,6 +102,36 @@ class _adminHomeState extends State<adminHome> {
                 fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
       ),
     );
+    final donorStatusButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      child: MaterialButton(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const donorStatus()));
+        },
+        child: const Text("Donor Status Report",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
+      ),
+    );
+    final recipientStatusButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      child: MaterialButton(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const receiveStatus()));
+        },
+        child: const Text("Recipient Status Report",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
+      ),
+    );
     return Scaffold(
       drawer:  NavigationDrawer(),
       appBar: AppBar(
@@ -159,7 +191,11 @@ class _adminHomeState extends State<adminHome> {
                 const SizedBox(height: 35),
                 DonorReportButton,
                 const SizedBox(height: 35),
+                donorStatusButton,
+                const SizedBox(height: 35),
                 recipientReportButton,
+                const SizedBox(height: 35),
+                recipientStatusButton,
                 const SizedBox(height: 35),
                 usersReportButton,
               ],

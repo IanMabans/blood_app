@@ -2,10 +2,15 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'home_screen.dart';
+
+class Database {
+  static String? receiveUid;
+}
 
 class ReceiveScreen extends StatefulWidget {
   const ReceiveScreen({Key? key}) : super(key: key);
@@ -53,7 +58,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     });
   }
 
-  TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+  TimeOfDay _timeOfDay = TimeOfDay.now();
 
   //editing Controller
   final fullNameEditingController = TextEditingController();
@@ -84,6 +89,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final receiveStatus = 'pending';
     //full name
     final fullName = TextFormField(
       autofocus: false,
@@ -149,6 +155,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     //age
     final age = TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(2),
+      ],
       controller: ageEditingController,
       decoration: InputDecoration(
         labelText: 'Age',
@@ -201,6 +210,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     //date of appointment
     final _date_of_appointment = TextFormField(
       controller: _date,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(10),
+      ],
       decoration: InputDecoration(
         icon: Icon(Icons.calendar_today_rounded),
         labelText: "Please select Appointment Date",
@@ -213,7 +225,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         DateTime? pickdate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2022),
+            firstDate: DateTime.now(),
             lastDate: DateTime(2050));
         if (pickdate != null) {
           setState(() {
@@ -341,7 +353,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       String time,
       String reasons,
     ) async {
-      await FirebaseFirestore.instance.collection("receive request").add({
+      await FirebaseFirestore.instance
+          .collection("receive request");
+      Map<String, dynamic> data = <String, dynamic>{
         'fullName': fullName,
         'age': age,
         'weight': weight,
@@ -350,6 +364,25 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         'date_of_appointment': _date.text,
         'email': emailEditingController.text,
         'reasons': reasonsVal,
+         //'time': _timeOfDay,
+      };
+      await FirebaseFirestore.instance
+          .collection("receive request")
+          .doc()
+          .set(data)
+          .whenComplete(() => print('Added Successfully'))
+          .catchError((e) => print(e));
+
+      throw FirebaseFirestore.instance.collection("receive status").add({
+        'fullName': fullName,
+        'age': age,
+        'weight': weight,
+        'gender': _genderVal,
+        'bloodgroup': bloodVal,
+        'date_of_appointment': _date.text,
+        //'email': emailEditingController.text,
+        'reasons': reasonsVal,
+        'Receive Status': receiveStatus,
         // 'time': _timeOfDay,
       });
     }
