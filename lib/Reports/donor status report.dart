@@ -9,6 +9,7 @@ class donorStatus extends StatefulWidget {
   @override
   State<donorStatus> createState() => _donorStatusState();
 }
+
 class Database {
   static String? userUid;
 }
@@ -17,9 +18,8 @@ var firestoreInstance = FirebaseFirestore.instance;
 dynamic firebaseUser = FirebaseAuth.instance.currentUser;
 
 class _donorStatusState extends State<donorStatus> {
-
   CollectionReference _collectionReference =
-  FirebaseFirestore.instance.collection('donor status');
+      FirebaseFirestore.instance.collection('donor_status');
 
   late Stream<QuerySnapshot> _streamData;
 
@@ -56,101 +56,111 @@ class _donorStatusState extends State<donorStatus> {
                   columns: [
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'FULL NAME',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'FULL NAME',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'DONATED BLOOD',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'DONATED BLOOD',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'BLOOD GROUP',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'EMAIL',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'GENDER',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'BLOOD GROUP',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'DATE OF APPOINTMENT',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'GENDER',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'AGE',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
+                      child: Text(
+                        'DATE OF APPOINTMENT',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                     DataColumn2(
                         label: Expanded(
-                          child: Text(
-                            'WEIGHT',
-                            style: TextStyle(
-                                fontStyle: FontStyle.italic, color: Colors.red),
-                          ),
-                        )),
-
+                      child: Text(
+                        'AGE',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
+                    DataColumn2(
+                        label: Expanded(
+                      child: Text(
+                        'WEIGHT',
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.red),
+                      ),
+                    )),
                   ],
                   rows: snapshot.data!.docs
                       .map((DocumentSnapshot thisItem) => DataRow(cells: [
-                    DataCell(Text(thisItem['fullName'])),
-                    DataCell(
-                      Text("${thisItem['Donor Status']}"),
-                      showEditIcon: true,
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('Status'),
-                              content: Text(
-                                  'Has the donor donated blood?'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      thisItem.reference.update(
-                                          {'Donor Status': 'donated'});
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('donated')),
-                                TextButton(
-                                    onPressed: () {
-                                      thisItem.reference.update({
-                                        'Donor Status': 'disqualified'
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('disqualified')),
-                              ],
-                            ));
-                      },
-                    ),
-                    DataCell(Text(thisItem['bloodgroup'])),
-                    DataCell(Text(thisItem['gender'])),
-                    DataCell(Text(thisItem['date_of_appointment'])),
-                    DataCell(Text("${thisItem['age']}")),
-                    DataCell(Text("${thisItem['weight']}")),
-                  ]))
+                            DataCell(Text(thisItem['fullName'])),
+                            DataCell(
+                              Text("${thisItem['Donor Status']}"),
+                              showEditIcon: true,
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: Text('Status'),
+                                          content: Text(
+                                              'Has the donor donated blood?'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  thisItem.reference.update({
+                                                    'Donor Status': 'donated'
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('donated')),
+                                            TextButton(
+                                                onPressed: () {
+                                                  thisItem.reference.update({
+                                                    'Donor Status':
+                                                        'disqualified'
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('disqualified')),
+                                          ],
+                                        ));
+                              },
+                            ),
+                            DataCell(Text(thisItem['email'])),
+                            DataCell(Text(thisItem['bloodgroup'])),
+                            DataCell(Text(thisItem['gender'])),
+                            DataCell(Text(thisItem['date_of_appointment'])),
+                            DataCell(Text("${thisItem['age']}")),
+                            DataCell(Text("${thisItem['weight']}")),
+                          ]))
                       .toList(),
                 ),
               );
@@ -163,18 +173,20 @@ class _donorStatusState extends State<donorStatus> {
           },
         ));
   }
+
   List<Map> parseData(QuerySnapshot querySnapshot) {
     List<QueryDocumentSnapshot> listDocs = querySnapshot.docs;
     List<Map> listItems = listDocs
         .map((e) => {
-      'fullName': e['fullName'],
-      'Donor Status': e['Donor Status'],
-      'bloodgroup': e['bloodgroup'],
-      'gender': e['gender'],
-      'date_of_appointment': e['date_of_appointment'],
-      'age': e['age'],
-      'weight': e['weight'],
-    })
+              'fullName': e['fullName'],
+              'Donor Status': e['Donor Status'],
+              'email': e['email'],
+              'bloodgroup': e['bloodgroup'],
+              'gender': e['gender'],
+              'date_of_appointment': e['date_of_appointment'],
+              'age': e['age'],
+              'weight': e['weight'],
+            })
         .toList();
     return listItems;
   }

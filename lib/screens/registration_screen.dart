@@ -25,6 +25,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final passwordEditingController = TextEditingController();
   final confirmPasswordEditingController = TextEditingController();
 
+  bool _passwordVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     //first name field
@@ -39,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           return ("Please enter your First Name");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Name(Min. 3 Character");
+          return ("Enter First Name(Min. 3 Character");
         }
         return null;
       },
@@ -69,7 +77,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           return ("Please enter your Second Name");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Name(Min. 3 Character");
+          return ("Enter Second Name(Min. 3 Character");
         }
       },
       onSaved: (value) {
@@ -97,7 +105,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+        if (!RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
@@ -120,7 +130,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final password = TextFormField(
       autofocus: false,
       controller: passwordEditingController,
-      obscureText: true,
+      obscureText: !_passwordVisible,
       //validator
       validator: (value) {
         RegExp regex = RegExp(r'^.{6,}$');
@@ -128,7 +138,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           return ("Please enter your password");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Password(Min. 6 Character");
+          return ("Enter Valid Password(Min. 6 Characters)");
         }
       },
       onSaved: (value) {
@@ -137,6 +147,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.vpn_key),
+        suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            }),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
         border: OutlineInputBorder(
@@ -149,7 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final confirmPassword = TextFormField(
       autofocus: false,
       controller: confirmPasswordEditingController,
-      obscureText: true,
+      obscureText: !_passwordVisible,
       //validator
       validator: (value) {
         if (confirmPasswordEditingController.text !=
@@ -164,6 +184,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.vpn_key),
+        suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            }),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Confirm Password",
         border: OutlineInputBorder(
@@ -182,6 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         onPressed: () {
           Center(child: CircularProgressIndicator());
           signUp(emailEditingController.text, passwordEditingController.text);
+          Center(child: CircularProgressIndicator());
         },
         child: const Text("Sign Up",
             textAlign: TextAlign.center,
@@ -237,10 +268,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                 ),
               )),
-        )));
+        ),
+        )
+    );
   }
 
   void signUp(String email, String password) async {
+    showDialog(context: context, builder: (context){
+      return Center(child:  CircularProgressIndicator());
+    });
     if (_formKey.currentState!.validate()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
@@ -249,8 +285,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               })
           .catchError((e) {
         Fluttertoast.showToast(msg: e!.message, backgroundColor: Colors.red);
+        Navigator.of(context).pop();
       });
+      Navigator.of(context).pop();
     }
+    Navigator.of(context).pop();
+
   }
 
   postDetailsToFirestore() async {
@@ -272,7 +312,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully ", backgroundColor: Colors.red);
+    Fluttertoast.showToast(
+        msg: "Account created successfully ", backgroundColor: Colors.red);
     Navigator.pushAndRemoveUntil(
         (context),
         MaterialPageRoute(builder: (context) => const HomeScreen()),

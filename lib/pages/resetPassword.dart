@@ -5,16 +5,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../screens/login_screen.dart';
 
-class settings extends StatefulWidget {
-  const settings({Key? key}) : super(key: key);
+class resetPassword extends StatefulWidget {
+  const resetPassword({Key? key}) : super(key: key);
 
   @override
-  State<settings> createState() => _settingsState();
+  State<resetPassword> createState() => _resetPasswordState();
 }
 
 final TextEditingController emailController = TextEditingController();
 
-class _settingsState extends State<settings> {
+class _resetPasswordState extends State<resetPassword> {
   @override
   void dispose() {
    emailController.dispose();
@@ -93,7 +93,7 @@ class _settingsState extends State<settings> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text('Settings'),
+        title: const Text('Reset Password'),
         centerTitle: true,
         actions:[
           Theme(
@@ -136,7 +136,9 @@ class _settingsState extends State<settings> {
                 ],
               ),
             ),
-            const SizedBox(height: 35),
+            Container(
+                color: Colors.white,
+                child: const SizedBox(height: 35)),
             forgotPassword,
             const SizedBox( height: 10),
             emailField,

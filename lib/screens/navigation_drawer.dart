@@ -1,13 +1,13 @@
 import 'package:blood_app/screens/drawer_item.dart';
-import 'package:blood_app/pages/people.dart';
+import 'package:blood_app/pages/writeReviews.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../pages/chats.dart';
-import '../pages/my_account.dart';
-import '../pages/settings.dart';
+import '../pages/maps.dart';
+import '../pages/reviews.dart';
+import '../pages/resetPassword.dart';
 import 'login_screen.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -47,33 +47,26 @@ class NavigationDrawer extends StatelessWidget {
                 height: 40,
               ),
               DrawerItem(
-                  name: 'People',
-                  icon: Icons.people,
+                  name: 'Write Reviews',
+                  icon: Icons.edit_outlined,
                   onPressed: () => onItemPressed(context, index: 0)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
-                  name: 'My Account',
-                  icon: Icons.account_box_rounded,
+                  name: 'Reviews',
+                  icon: Icons.reviews_outlined,
                   onPressed: () => onItemPressed(context, index: 1)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
-                  name: 'Chats',
-                  icon: Icons.message_outlined,
+                  name: 'Maps',
+                  icon: Icons.location_on_outlined,
                   onPressed: () => onItemPressed(context, index: 2)),
               const SizedBox(
                 height: 30,
               ),
-              // DrawerItem(
-              //     name: 'Favourites',
-              //     icon: Icons.favorite_outline,
-              //     onPressed: () => onItemPressed(context, index: 3)),
-              // const SizedBox(
-              //   height: 30,
-              // ),
               const Divider(
                 thickness: 1,
                 height: 10,
@@ -83,7 +76,7 @@ class NavigationDrawer extends StatelessWidget {
                 height: 30,
               ),
               DrawerItem(
-                  name: 'Settings',
+                  name: 'Reset Password',
                   icon: Icons.settings,
                   onPressed: () => onItemPressed(context, index: 4)),
               const SizedBox(
@@ -104,20 +97,20 @@ class NavigationDrawer extends StatelessWidget {
     switch (index) {
       case 0:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const People()));
+            context, MaterialPageRoute(builder: (context) => const writeReviews()));
         break;
       case 1:
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const myAccount()));
+            MaterialPageRoute(builder: (context) => const reviews()));
         break;
       case 2:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const chats()));
+            context, MaterialPageRoute(builder: (context) => const hospitalMaps()));
         break;
       case 4:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const settings()));
+            context, MaterialPageRoute(builder: (context) => const resetPassword()));
         break;
       case 5:
         Navigator.of(context).pushAndRemoveUntil(

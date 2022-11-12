@@ -103,7 +103,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           return ("Please enter your Full Name");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Name(Min. 7 Character)");
+          return ("Enter Full Name(Min. 7 Character)");
         }
         return null;
       },
@@ -133,7 +133,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+        if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
@@ -231,6 +231,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           setState(() {
             _date.text = DateFormat('dd/MM/yyyy').format(pickdate);
           });
+        }
+      },
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your date of Appointment';
+        } else {
+          return null;
         }
       },
     );
@@ -373,14 +380,14 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           .whenComplete(() => print('Added Successfully'))
           .catchError((e) => print(e));
 
-      throw FirebaseFirestore.instance.collection("receive status").add({
+      await FirebaseFirestore.instance.collection("receive status").add({
         'fullName': fullName,
         'age': age,
         'weight': weight,
         'gender': _genderVal,
         'bloodgroup': bloodVal,
         'date_of_appointment': _date.text,
-        //'email': emailEditingController.text,
+        'email': emailEditingController.text,
         'reasons': reasonsVal,
         'Receive Status': receiveStatus,
         // 'time': _timeOfDay,
@@ -396,7 +403,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            Center(child: CircularProgressIndicator());
+            showDialog(context: context, builder: (context){
+              return Center(child:  CircularProgressIndicator());
+            });
             final response = await sendEmail(
               fullNameEditingController.value.text,
               emailEditingController.value.text,
@@ -430,17 +439,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 : const SnackBar(
                     content: Text('Failed to book!'),
                     backgroundColor: Colors.green));
-            ScaffoldMessenger.of(context).showSnackBar(response == 200
-                ? const SnackBar(
-                    content: Text('Message Sent!'),
-                    backgroundColor: Colors.green)
-                : const SnackBar(
-                    content: Text('Failed to send message!'),
-                    backgroundColor: Colors.red));
-            fullNameEditingController.clear();
-            emailEditingController.clear();
-            messageController.clear();
-            ageEditingController.clear();
+            // fullNameEditingController.clear();
+            // emailEditingController.clear();
+            // messageController.clear();
+            // ageEditingController.clear();
           }
         },
         child: const Text("Book",
