@@ -66,6 +66,7 @@ class _DonateScreenState extends State<DonateScreen> {
   final emailEditingController = TextEditingController();
   final messageController = TextEditingController();
 
+
   final databaseRef = FirebaseDatabase.instance.ref();
 
   void dispose() {
@@ -97,7 +98,7 @@ class _DonateScreenState extends State<DonateScreen> {
           return ("Please enter your Full Name");
         }
         if (!regex.hasMatch(value)) {
-          return ("Enter Valid Name(Min. 3 Character)");
+          return ("Enter Full Name(Min. 7 Character)");
         }
         return null;
       },
@@ -127,13 +128,16 @@ class _DonateScreenState extends State<DonateScreen> {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+        if (!RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
       },
       onSaved: (value) {
         emailEditingController.text = value!;
+
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -202,7 +206,7 @@ class _DonateScreenState extends State<DonateScreen> {
         ));
 
     //date of appointment
-    final date_of_appointment = TextField(
+    final date_of_appointment = TextFormField(
       inputFormatters: [
         LengthLimitingTextInputFormatter(10),
       ],
@@ -225,6 +229,13 @@ class _DonateScreenState extends State<DonateScreen> {
           setState(() {
             _date.text = DateFormat('dd/MM/yyyy').format(pickdate);
           });
+        }
+      },
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your date of Appointment';
+        } else {
+          return null;
         }
       },
     );
@@ -327,20 +338,25 @@ class _DonateScreenState extends State<DonateScreen> {
         'email': emailEditingController.text,
         // 'time': _timeOfDay,
       });
-      throw FirebaseFirestore.instance.collection("donor status").add({
+      await FirebaseFirestore.instance.collection("donor_status");
+      Map<String, dynamic> data = <String, dynamic>{
         'fullName': fullName,
         'age': age,
         'weight': weight,
         'gender': _genderVal,
         'bloodgroup': bloodVal,
         'date_of_appointment': _date.text,
+        'email': emailEditingController.text,
         'Donor Status': donorStatus,
-
-        //'email': emailEditingController.text,
-        // 'time': _timeOfDay,
-      });
+        //'time': _timeOfDay,
+      };
+      await FirebaseFirestore.instance
+          .collection("donor_status")
+          .doc()
+          .set(data)
+          .whenComplete(() => print('Added Successfully'))
+          .catchError((e) => print(e));
     }
-
 
     //Book button
     final bookButton = Material(
@@ -350,10 +366,12 @@ class _DonateScreenState extends State<DonateScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
-          Center(
-            child: CircularProgressIndicator(),
-          );
           if (_formKey.currentState!.validate()) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Center(child: CircularProgressIndicator());
+                });
             final response = await sendEmail(
                 fullNameEditingController.value.text,
                 emailEditingController.value.text,
@@ -372,7 +390,8 @@ class _DonateScreenState extends State<DonateScreen> {
                 dateEditingController.text.trim(),
                 emailEditingController.text.trim(),
                 timeEditingController.text.trim());
-            Fluttertoast.showToast(msg: 'Successfully Booked', backgroundColor: Colors.red);
+            Fluttertoast.showToast(
+                msg: 'Successfully Booked', backgroundColor: Colors.red);
 
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen()));
@@ -384,7 +403,6 @@ class _DonateScreenState extends State<DonateScreen> {
                     content: Text('Failed to book!'),
                     backgroundColor: Colors.red));
             fullNameEditingController.clear();
-            emailEditingController.clear();
             messageController.clear();
             ageEditingController.clear();
           }

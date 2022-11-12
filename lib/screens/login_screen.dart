@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../pages/settings.dart';
+import '../pages/resetPassword.dart';
 
 //firebase
 final _auth = FirebaseAuth.instance;
@@ -31,6 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // string for displaying the error Message
   String? errorMessage;
+  bool _passwordVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+        if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
@@ -67,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final passwordField = TextFormField(
       autofocus: false,
       controller: passwordController,
-      obscureText: true,
+      obscureText: !_passwordVisible,
 
       //validator
       validator: (value) {
@@ -84,6 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
+        suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            }),
         prefixIcon: const Icon(Icons.vpn_key),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
@@ -94,17 +111,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     // Forgot Password
-    final forgotPassword= GestureDetector(
-      onTap: (){
+    final forgotPassword = GestureDetector(
+      onTap: () {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const settings()));
+            MaterialPageRoute(builder: (context) => const resetPassword()));
       },
       child: Text(
-          'Forgot Password?',
-              style: TextStyle(
+        'Forgot Password?',
+        style: TextStyle(
           color: Colors.red,
-        fontWeight: FontWeight.bold,
-      ),
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
 
@@ -195,31 +212,37 @@ class _LoginScreenState extends State<LoginScreen> {
 //login function
 signIn(String email, String password, String adminEmail,
     BuildContext context) async {
+  showDialog(context: context, builder: (context){
+    return Center(child:  CircularProgressIndicator());
+  });
   if (email == ('admin@gmail.com')) {
     CircularProgressIndicator();
     await _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
-              Fluttertoast.showToast(msg: "Welcome Admin 🙂", backgroundColor: Colors.red),
+              Fluttertoast.showToast(
+                  msg: "Welcome Admin 🙂", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const adminHome())),
             })
         .catchError((e) {
-      Fluttertoast.showToast(msg: e!.message,backgroundColor: Colors.red);
+      Fluttertoast.showToast(msg: e!.message, backgroundColor: Colors.red);
+      Navigator.of(context).pop();
     });
   } else if (true) {
     CircularProgressIndicator();
     await _admin
-
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) => {
-              Fluttertoast.showToast(msg: "Login Successful ", backgroundColor: Colors.red),
+              Fluttertoast.showToast(
+                  msg: "Login Successful ", backgroundColor: Colors.red),
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const HomeScreen())),
+
             })
         .catchError((e) {
-      Fluttertoast.showToast(msg: e!.message,backgroundColor: Colors.red);
-
+      Fluttertoast.showToast(msg: e!.message, backgroundColor: Colors.red);
+      Navigator.of(context).pop();
     });
   }
 }
