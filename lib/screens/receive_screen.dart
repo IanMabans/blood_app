@@ -525,9 +525,9 @@ Future sendEmail(
   String message,
   String reasons,
 ) async {
-  final serviceId = 'service_uehihvi';
-  final templateId = 'template_gja27um';
-  final userId = 'uAtaDvVi-cdzgGdQ5';
+   final serviceId = 'service';
+  final templateId = 'template';
+  final userId = 'key';
 
   final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
   final response = await http.post(
