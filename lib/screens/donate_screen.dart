@@ -483,9 +483,9 @@ Future sendEmail(
   String bloodVal,
   String date,
 ) async {
-  final serviceId = 'service_abignuu';
-  final templateId = 'template_wocn4q9';
-  final userId = 'uAtaDvVi-cdzgGdQ5';
+  final serviceId = 'service';
+  final templateId = 'template';
+  final userId = 'key';
 
   final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
   final response = await http.post(
